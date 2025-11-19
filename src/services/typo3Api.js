@@ -1,3 +1,5 @@
+import { supabase, isSupabaseEnabled } from './supabaseClient'
+
 const STATIC_BASE = import.meta.env.BASE_URL ?? '/'
 const MENU_PATH = `${STATIC_BASE}json/dishes.json`
 const ORDERS_PATH = `${STATIC_BASE}json/orders.json`
@@ -26,6 +28,20 @@ function writeStoredOrders(orders) {
 }
 
 export async function fetchMenuItems() {
+  if (isSupabaseEnabled()) {
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*')
+      .eq('is_active', true)
+      .order('name', { ascending: true })
+
+    if (error) {
+      console.warn('Supabase menu fetch failed, falling back to static JSON', error)
+    } else if (Array.isArray(data) && data.length > 0) {
+      return data
+    }
+  }
+
   const response = await fetch(MENU_PATH)
   if (!response.ok) {
     throw new Error(`Failed to load menu (${response.status})`)
@@ -35,6 +51,20 @@ export async function fetchMenuItems() {
 }
 
 export async function fetchOrders() {
+  if (isSupabaseEnabled()) {
+    const { data, error } = await supabase
+      .from('orders_view')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(25)
+
+    if (error) {
+      console.warn('Supabase orders fetch failed, falling back to static JSON', error)
+    } else if (Array.isArray(data)) {
+      return data
+    }
+  }
+
   let staticOrders = []
   try {
     const response = await fetch(ORDERS_PATH)
