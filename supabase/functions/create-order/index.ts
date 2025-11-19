@@ -1,32 +1,88 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
-// Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
+import { createClient } from "jsr:@supabase/supabase-js@2"
 
-console.log("Hello from Functions!")
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env variable")
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+function jsonResponse(body: unknown, init?: ResponseInit) {
+  return new Response(JSON.stringify(body), {
+    headers: { "Content-Type": "application/json" },
+    ...init,
+  })
+}
+
+async function insertCustomer(customer: any) {
+  const { data, error } = await supabase
+    .from("customers")
+    .insert({
+      name: customer?.name,
+      email: customer?.email,
+      fulfillment: customer?.fulfillment ?? "pickup",
+    })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+async function insertOrder(customerId: string, totals: any, payment: any, notes: string | undefined) {
+  const { data, error } = await supabase
+    .from("orders")
+    .insert({
+      customer_id: customerId,
+      subtotal: totals?.subtotal ?? 0,
+      service_fee: totals?.serviceFee ?? 0,
+      delivery_fee: totals?.deliveryFee ?? 0,
+      total: totals?.total ?? 0,
+      payment_provider: payment?.provider,
+      payment_status: payment?.status,
+      notes,
+    })
+    .select()
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+async function insertOrderItems(orderId: string, cart: any[]) {
+  const rows = cart.map((item) => ({
+    order_id: orderId,
+    menu_item_id: item.id,
+    quantity: item.quantity,
+    unit_price: item.price,
+  }))
+
+  const { error } = await supabase.from("order_items").insert(rows)
+  if (error) throw error
+}
 
 Deno.serve(async (req) => {
-  const { name } = await req.json()
-  const data = {
-    message: `Hello ${name}!`,
+  if (req.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed" }, { status: 405 })
   }
 
-  return new Response(
-    JSON.stringify(data),
-    { headers: { "Content-Type": "application/json" } },
-  )
+  try {
+    const { customer, cart, totals, payment } = await req.json()
+
+    if (!customer?.name || !Array.isArray(cart) || cart.length === 0) {
+      return jsonResponse({ error: "Invalid payload" }, { status: 400 })
+    }
+
+    const customerRow = await insertCustomer(customer)
+    const orderRow = await insertOrder(customerRow.id, totals, payment, customer?.notes)
+    await insertOrderItems(orderRow.id, cart)
+
+    return jsonResponse({ orderId: orderRow.id })
+  } catch (error) {
+    console.error("create-order failed", error)
+    return jsonResponse({ error: error.message ?? "Server error" }, { status: 500 })
+  }
 })
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/create-order' \
-    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-    --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
-
-*/
