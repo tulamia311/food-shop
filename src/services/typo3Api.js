@@ -81,6 +81,18 @@ export async function fetchOrders() {
 }
 
 export async function saveOrder(order) {
+  if (isSupabaseEnabled()) {
+    const { data, error } = await supabase.functions.invoke('create-order', {
+      body: order,
+    })
+
+    if (error) {
+      console.warn('Supabase order save failed, falling back to local storage', error)
+    } else if (data?.orderId) {
+      return data.orderId
+    }
+  }
+
   const newOrder = {
     ...order,
     id: crypto.randomUUID(),
