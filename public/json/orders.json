@@ -1,0 +1,180 @@
+[
+    {
+        "id": "order-0001",
+        "createdAt": "2025-11-18T13:35:00+00:00",
+        "customer": {
+            "name": "Max Mustermann",
+            "email": "max@gmx.de",
+            "fulfillment": "pickup",
+            "notes": ""
+        },
+        "cart": [
+            {
+                "id": "brezel",
+                "name": "Brezel",
+                "price": 3.2,
+                "quantity": 2,
+                "lineTotal": 6.4
+            },
+            {
+                "id": "hotpot",
+                "name": "Mini Hot Pot",
+                "price": 12,
+                "quantity": 1,
+                "lineTotal": 12
+            }
+        ],
+        "totals": {
+            "subtotal": 18.4,
+            "serviceFee": 1.5,
+            "deliveryFee": 0,
+            "total": 19.9
+        },
+        "payment": {
+            "provider": "paypal",
+            "status": "pending",
+            "transactionId": null
+        }
+    },
+    {
+        "customer": {
+            "name": "Anh Tuan Vu",
+            "email": "vuanhtuan311@gmail.com",
+            "fulfillment": "pickup",
+            "notes": "thank you"
+        },
+        "cart": [
+            {
+                "id": "brezel",
+                "name": "Brezel",
+                "description": "Freshly baked Bavarian pretzel with flaky salt and a crunchy crust.",
+                "price": 3.2,
+                "tags": [
+                    "snack"
+                ],
+                "emoji": "🥨",
+                "quantity": 1,
+                "lineTotal": 3.2
+            },
+            {
+                "id": "riceball",
+                "name": "Riceball",
+                "description": "Crispy onigiri stuffed with savory mushroom filling and sesame.",
+                "price": 4.5,
+                "tags": [
+                    "vegan",
+                    "popular"
+                ],
+                "emoji": "🍙",
+                "quantity": 1,
+                "lineTotal": 4.5
+            }
+        ],
+        "totals": {
+            "subtotal": 7.7,
+            "serviceFee": 1.5,
+            "deliveryFee": 0,
+            "total": 9.2
+        },
+        "payment": {
+            "provider": "paypal",
+            "status": "pending"
+        },
+        "id": "order-4d56cb8a4215",
+        "createdAt": "2025-11-18T14:53:28+01:00"
+    },
+    {
+        "customer": {
+            "name": "Minh Lan Ngo",
+            "email": "tamthoi102020@gmail.com",
+            "fulfillment": "pickup",
+            "notes": "thanks",
+            "paymentMethod": "paypal"
+        },
+        "cart": [
+            {
+                "id": "brezel",
+                "name": "Brezel",
+                "description": "Freshly baked Bavarian pretzel with flaky salt and a crunchy crust.",
+                "price": 3.2,
+                "tags": [
+                    "snack"
+                ],
+                "emoji": "🥨",
+                "quantity": 2,
+                "lineTotal": 6.4
+            }
+        ],
+        "totals": {
+            "subtotal": 6.4,
+            "serviceFee": 1.5,
+            "deliveryFee": 0,
+            "total": 7.9
+        },
+        "payment": {
+            "provider": "paypal",
+            "status": "pending"
+        },
+        "id": "order-d8b22b58fa1d",
+        "createdAt": "2025-11-18T15:25:36+01:00"
+    },
+    {
+        "customer": {
+            "name": "Tam Vu",
+            "email": "tamthoi102020@gmail.com",
+            "fulfillment": "pickup",
+            "notes": "thanks",
+            "paymentMethod": "credit-card"
+        },
+        "cart": [
+            {
+                "id": "hotpot",
+                "name": "Mini Hot Pot",
+                "description": "Rich miso broth with seasonal veggies, tofu, and udon.",
+                "price": 12,
+                "tags": [
+                    "comfort"
+                ],
+                "emoji": "🍲",
+                "quantity": 1,
+                "lineTotal": 12
+            },
+            {
+                "id": "bao-duo",
+                "name": "Bao Duo",
+                "description": "Two steamed bao buns with pickled veggies and hoisin glaze.",
+                "price": 8,
+                "tags": [
+                    "street-food"
+                ],
+                "emoji": "🥟",
+                "quantity": 1,
+                "lineTotal": 8
+            },
+            {
+                "id": "brezel",
+                "name": "Brezel",
+                "description": "Freshly baked Bavarian pretzel with flaky salt and a crunchy crust.",
+                "price": 3.2,
+                "tags": [
+                    "snack"
+                ],
+                "emoji": "🥨",
+                "quantity": 1,
+                "lineTotal": 3.2
+            }
+        ],
+        "totals": {
+            "subtotal": 23.2,
+            "serviceFee": 1.5,
+            "deliveryFee": 0,
+            "total": 24.7
+        },
+        "payment": {
+            "provider": "credit-card",
+            "status": "pending"
+        },
+        "id": "order-d0ec0f982f6c",
+        "createdAt": "2025-11-18T15:28:01+01:00"
+    }
+]
