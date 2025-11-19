@@ -18,6 +18,49 @@ function readStoredOrders() {
   }
 }
 
+function normalizeSupabaseOrders(rows) {
+  if (!Array.isArray(rows)) return []
+
+  return rows.map((row) => {
+    const cart = Array.isArray(row.order_items)
+      ? row.order_items.map((item) => {
+          const menu = item.menu_item ?? {}
+          const unitPrice = Number(item.unit_price ?? menu.price ?? 0)
+          const quantity = Number(item.quantity ?? 0)
+
+          return {
+            id: menu.id ?? item.menu_item_id ?? crypto.randomUUID(),
+            name: menu.name ?? 'Menu item',
+            quantity,
+            price: unitPrice,
+            lineTotal: Number((unitPrice * quantity).toFixed(2)),
+          }
+        })
+      : []
+
+    return {
+      id: row.id,
+      createdAt: row.created_at,
+      customer: {
+        name: row.customer?.name ?? 'Guest',
+        email: row.customer?.email ?? '',
+        fulfillment: row.customer?.fulfillment ?? 'pickup',
+      },
+      payment: {
+        provider: row.payment_provider ?? 'cash',
+        status: row.payment_status ?? 'pending',
+      },
+      totals: {
+        subtotal: Number(row.subtotal ?? 0),
+        serviceFee: Number(row.service_fee ?? 0),
+        deliveryFee: Number(row.delivery_fee ?? 0),
+        total: Number(row.total ?? 0),
+      },
+      cart,
+    }
+  })
+}
+
 function writeStoredOrders(orders) {
   if (typeof window === 'undefined') return
   try {
@@ -38,6 +81,7 @@ export async function fetchMenuItems() {
     if (error) {
       console.warn('Supabase menu fetch failed, falling back to static JSON', error)
     } else if (Array.isArray(data) && data.length > 0) {
+      console.info('[Supabase] Menu fetch succeeded', { rows: data.length })
       return data
     }
   }
@@ -53,15 +97,42 @@ export async function fetchMenuItems() {
 export async function fetchOrders() {
   if (isSupabaseEnabled()) {
     const { data, error } = await supabase
-      .from('orders_view')
-      .select('*')
+      .from('orders')
+      .select(
+        `
+        id,
+        created_at,
+        subtotal,
+        service_fee,
+        delivery_fee,
+        total,
+        payment_provider,
+        payment_status,
+        customer:customers (
+          name,
+          email,
+          fulfillment
+        ),
+        order_items (
+          quantity,
+          unit_price,
+          menu_item:menu_items (
+            id,
+            name,
+            price
+          )
+        )
+      `
+      )
       .order('created_at', { ascending: false })
       .limit(25)
 
     if (error) {
       console.warn('Supabase orders fetch failed, falling back to static JSON', error)
-    } else if (Array.isArray(data)) {
-      return data
+    } else {
+      const normalized = normalizeSupabaseOrders(data)
+      console.info('[Supabase] Orders fetch succeeded', { rows: normalized.length })
+      return normalized
     }
   }
 
@@ -89,7 +160,10 @@ export async function saveOrder(order) {
     if (error) {
       console.warn('Supabase order save failed, falling back to local storage', error)
     } else if (data?.orderId) {
+      console.info('[Supabase] Order saved', { orderId: data.orderId })
       return data.orderId
+    } else {
+      console.warn('Supabase order save responded without orderId, falling back', data)
     }
   }
 
