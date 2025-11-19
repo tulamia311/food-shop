@@ -2,7 +2,8 @@
 
 React front-end for Tulamia’s mini food shop, powered by a TYPO3 v12 JSON API. Guests can browse the live menu, manage their cart, submit orders, and review the latest activity. PayPal integration is being implemented incrementally.
 
-- Full project guide: [`docs/project-guide.md`](docs/project-guide.md)
+- GitHub Pages deployment notes: [deploy-to-github-pages-problem-solved.md](docs/deploy-to-github-pages-problem-solved.md)
+- Full project guide: [project-guide.md](docs/project-guide.md)
 - TYPO3 extension lives in `../TYPO3v12-Websites/tulamia-v12/packages/tulamia_site`
 
 ## Quick Start
