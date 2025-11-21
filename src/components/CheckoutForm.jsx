@@ -21,8 +21,8 @@ function CheckoutForm({ onOrderSaved }) {
   const [paypalReady, setPaypalReady] = useState(false)
   const [paypalError, setPaypalError] = useState(null)
   const paypalButtonsRef = useRef(null)
-
-  const paypalEnabled = PAYPAL_ENV_FLAG && Boolean(PAYPAL_CLIENT_ID) && isSupabaseEnabled()
+  const supabaseAvailable = isSupabaseEnabled()
+  const paypalEnabled = PAYPAL_ENV_FLAG && Boolean(PAYPAL_CLIENT_ID) && supabaseAvailable
   const showPayPalButtons = paypalEnabled && formData.paymentMethod === 'paypal'
 
   const totals = useMemo(() => {
@@ -33,6 +33,16 @@ function CheckoutForm({ onOrderSaved }) {
   }, [subtotal, formData.fulfillment])
 
   const canSubmit = subtotal > 0 && formData.name && formData.email
+
+  useEffect(() => {
+    console.log('PayPal debug flags', {
+      PAYPAL_ENV_FLAG,
+      hasPaypalClientId: Boolean(PAYPAL_CLIENT_ID),
+      supabaseAvailable,
+      paypalEnabled,
+      showPayPalButtons,
+    })
+  }, [supabaseAvailable, paypalEnabled, showPayPalButtons])
 
   useEffect(() => {
     if (!paypalEnabled) return
@@ -49,7 +59,8 @@ function CheckoutForm({ onOrderSaved }) {
     }
 
     const script = document.createElement('script')
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=EUR&intent=CAPTURE`
+    // PayPal SDK expects lowercase `intent=capture` (uppercase CAPTURE causes a 400 SDK validation error).
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=EUR&intent=capture`
     script.async = true
     script.dataset.paypalSdk = 'true'
     script.onload = () => setPaypalReady(true)
@@ -178,6 +189,16 @@ function CheckoutForm({ onOrderSaved }) {
     event.preventDefault()
     if (!canSubmit) return
 
+    // If PayPal is selected and PayPal buttons are active, do not allow the
+    // normal submit button to bypass the PayPal popup.
+    if (showPayPalButtons && formData.paymentMethod === 'paypal') {
+      setOrderState((prev) => ({
+        ...prev,
+        error: 'To pay with PayPal, please use the PayPal buttons instead of the "Place order" button.',
+      }))
+      return
+    }
+
     const orderPayload = {
       customer: formData,
       cart: cartLines,
@@ -196,7 +217,7 @@ function CheckoutForm({ onOrderSaved }) {
       if (onOrderSaved) {
         onOrderSaved(orderId, orderPayload)
       }
-      setOrderState({ sending: false, success: `Order ${orderId} saved. PayPal coming soon.`, error: null })
+      setOrderState({ sending: false, success: `Order ${orderId} saved.`, error: null })
     } catch (error) {
       setOrderState({ sending: false, success: null, error: error.message })
     }
@@ -244,6 +265,15 @@ function CheckoutForm({ onOrderSaved }) {
             <option value="credit-card">Credit card</option>
           </select>
         </label>
+        {formData.paymentMethod === 'paypal' && !paypalEnabled && (
+          <p className="status-banner error">
+            PayPal is not available in this environment.
+            {!PAYPAL_ENV_FLAG && ' Reason: VITE_ENABLE_PAYPAL is not set to "true".'}
+            {PAYPAL_ENV_FLAG && !PAYPAL_CLIENT_ID && ' Reason: VITE_PAYPAL_CLIENT_ID is missing.'}
+            {PAYPAL_ENV_FLAG && PAYPAL_CLIENT_ID && !supabaseAvailable &&
+              ' Reason: Supabase is not enabled (check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY).'}
+          </p>
+        )}
         <label>
           Notes
           <textarea
@@ -263,9 +293,11 @@ function CheckoutForm({ onOrderSaved }) {
           </div>
         )}
 
-        <button type="submit" className="primary" disabled={!canSubmit || orderState.sending}>
-          {orderState.sending ? 'Sending…' : 'Place order'}
-        </button>
+        {(!showPayPalButtons || formData.paymentMethod !== 'paypal') && (
+          <button type="submit" className="primary" disabled={!canSubmit || orderState.sending}>
+            {orderState.sending ? 'Sending…' : 'Place order'}
+          </button>
+        )}
         {orderState.success && <p className="status-banner success">{orderState.success}</p>}
         {orderState.error && <p className="status-banner error">{orderState.error}</p>}
       </form>
