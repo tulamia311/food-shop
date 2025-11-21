@@ -3,9 +3,26 @@
 This document describes the current PayPal **sandbox** integration in the food shop app using simple language.
 
 - **Sandbox** = test mode, using fake money and test accounts.
-- **Supabase Edge Function** = a small server-side function that runs on Supabase.
+- **Supabase Edge Function** = a small server-side function (mini backend) that runs on Supabase.
 - **Frontend** = the React app that runs in the browser.
 - **Environment variables** = configuration values stored in files like `.env`, not in the code.
+
+### Visual overview
+
+```mermaid
+flowchart LR
+  A[Customer in browser<br/>(React / CheckoutForm)] -->|clicks PayPal button| B[PayPal popup<br/>(sandbox)]
+  B -->|payment approved| C[Edge Function<br/>capture-paypal-order]
+  C -->|capture order| D[PayPal Sandbox API]
+  C -->|save data| E[Supabase DB<br/>(customers, orders, order_items)]
+  E -->|latest order data| A
+```
+
+Read this diagram as:
+
+- The **browser** opens a PayPal popup.
+- After approval, the **Edge Function** talks to **PayPal** and **Supabase**.
+- The order is stored in the database and can later be shown in the UI.
 
 ---
 

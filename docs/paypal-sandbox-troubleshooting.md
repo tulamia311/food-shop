@@ -4,6 +4,32 @@ This doc summarizes the main problems we hit while integrating PayPal **sandbox*
 
 It is written in simple language so you can quickly remember what to check next time.
 
+### Quick picture of the debugging journey
+
+```mermaid
+flowchart TD
+  A[Start: want PayPal sandbox] --> B[DB migration fails
+orders table missing]
+  B --> C[Fix migration so orders table
+is created if missing]
+  C --> D[Link project & push migration
+supabase link + db push]
+  D --> E[Edge Function env problems
+supabase/.env + SUPABASE_*]
+  E --> F[Split envs:
+EDGE_PAYPAL_* in file,
+SUPABASE_* exported in shell]
+  F --> G[PayPal buttons invisible]
+  G --> H[Add VITE_PAYPAL_CLIENT_ID
+& debug banner]
+  H --> I[PayPal SDK 400 error
+intent=CAPTURE]
+  I --> J[Fix URL to intent=capture]
+  J --> K[Working sandbox checkout]
+```
+
+Follow the boxes from top to bottom to see the order in which we fixed things.
+
 ---
 
 ## 1. Database migration error: `relation "public.orders" does not exist`
