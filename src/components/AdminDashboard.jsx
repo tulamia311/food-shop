@@ -33,8 +33,8 @@ function AdminDashboard({ menuItems, orders, onRefreshData }) {
         <AdminLoginForm />
       </section>
       <div className="admin-grid">
-        <AdminMenuManager menuItems={menuItems} onRefreshData={onRefreshData} />
         <AdminOrdersManager orders={orders} onRefreshData={onRefreshData} />
+        <AdminMenuManager menuItems={menuItems} onRefreshData={onRefreshData} />
       </div>
     </div>
   )
