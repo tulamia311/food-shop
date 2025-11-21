@@ -30,16 +30,7 @@ function AdminDashboard({ menuItems, orders, onRefreshData }) {
   return (
     <div className="admin-stack">
       <section className="admin-card">
-        <div className="section-header">
-          <div>
-            <p className="eyebrow">Admin</p>
-            <h2>Manage shop content</h2>
-            <p className="admin-help-text">
-              CRUD tooling is scaffolded. Connect actions to Supabase mutations to go live.
-            </p>
-          </div>
-          <AdminLoginForm />
-        </div>
+        <AdminLoginForm />
       </section>
       <div className="admin-grid">
         <AdminMenuManager menuItems={menuItems} onRefreshData={onRefreshData} />
