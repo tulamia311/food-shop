@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useCart } from '../context/CartContext'
-import { saveOrder } from '../services/typo3Api'
+import { saveOrder } from '../services/dataApi'
 import { supabase, isSupabaseEnabled } from '../services/supabaseClient'
 
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID

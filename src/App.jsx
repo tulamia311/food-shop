@@ -5,7 +5,7 @@ import MenuGrid from './components/MenuGrid'
 import CartSummary from './components/CartSummary'
 import CheckoutForm from './components/CheckoutForm'
 import defaultMenuItems from './data/menuItems'
-import { fetchMenuItems, fetchOrders } from './services/typo3Api'
+import { fetchMenuItems, fetchOrders } from './services/dataApi'
 import AdminDashboard from './components/AdminDashboard.jsx'
 import { useAuth } from './context/AuthContext.jsx'
 
