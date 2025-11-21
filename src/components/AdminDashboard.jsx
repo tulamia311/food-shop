@@ -32,7 +32,7 @@ function AdminDashboard({ menuItems, orders, onRefreshData }) {
       <section className="admin-card">
         <div className="section-header">
           <div>
-            <p className="eyebrow">Admin workspace</p>
+            <p className="eyebrow">Admin</p>
             <h2>Manage shop content</h2>
             <p className="admin-help-text">
               CRUD tooling is scaffolded. Connect actions to Supabase mutations to go live.

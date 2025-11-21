@@ -34,7 +34,7 @@ We added:
 - An `AuthProvider` React context to track auth state (`session`, `user`, `isAdmin`).
 - A two-tab layout:
   - **Customer view**: existing shop UI.
-  - **Admin workspace**: admin-only dashboard with CRUD tools.
+  - **Admin**: admin-only dashboard with CRUD tools.
 - **RLS policies** on `menu_items`, `orders`, `order_items`, `customers` so that only JWTs with `admin: true` in app metadata may write.
 - The Edge Function `create-order` continues to use the **service role key** and bypasses RLS for order insertion.
 
@@ -86,7 +86,7 @@ This context is provided at the root in `src/main.jsx`:
 - `App.jsx` reads `const { isAdmin } = useAuth()`.
 - It controls a simple **tab bar**:
   - Tab 1: "Customer view" → the existing shop UI.
-  - Tab 2: "Admin workspace" → admin dashboard.
+  - Tab 2: "Admin" → admin dashboard.
 - `AdminDashboard` chooses between:
   - An `AdminLoginForm` if `isAdmin` is `false`.
   - The admin CRUD components if `isAdmin` is `true`.

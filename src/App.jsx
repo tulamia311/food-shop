@@ -107,11 +107,8 @@ function App() {
             className={`tab-button ${activeTab === 'admin' ? 'active' : ''}`}
             onClick={() => setActiveTab('admin')}
           >
-            Admin workspace {isAdmin ? '' : '🔒'}
+            Admin {isAdmin ? '' : '🔒'}
           </button>
-          {!isAdmin && (
-            <span className="tab-hint">Sign in via the Admin tab to unlock CRUD tools.</span>
-          )}
         </nav>
 
         {activeTab === 'shop' && (

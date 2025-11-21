@@ -432,6 +432,7 @@
   padding: 10px;
   border-radius: 16px;
   border: 1px solid rgba(28, 20, 13, 0.08);
+  justify-content: space-between;
 }
 
 .tab-button {
@@ -454,13 +455,8 @@
   background: rgba(28, 20, 13, 0.08);
 }
 
-.tab-hint {
-  font-size: 0.85rem;
-  color: #7f6a58;
-  margin-left: auto;
-}
 
-/* Admin workspace */
+/* Admin */
 
 .admin-stack {
   display: flex;
