@@ -6,7 +6,7 @@
 .app-shell {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 48px 24px 80px;
+  padding: 20px;
   font-family: 'Sora', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #1c140d;
 }
@@ -43,12 +43,13 @@
   margin-bottom: 48px;
 }
 
-.hero .eyebrow {
+.eyebrow {
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.2em;
   color: #cf5c36;
   margin-bottom: 16px;
+  text-align: center;
 }
 
 .hero h1 {

@@ -94,6 +94,7 @@ function App() {
   return (
     <CartProvider menuItems={menuItems}>
       <div className="app-shell">
+        <p className="eyebrow">Tulamia Mini Food Shop</p>
         <nav className="tab-bar">
           <button
             type="button"
@@ -118,7 +119,6 @@ function App() {
               {status.error && <div className="status-banner error">{status.error}</div>}
             </div>
             <header className="hero">
-              <p className="eyebrow">Tulamia Mini Food Shop</p>
               <h1>
                 Small bites, <span>big comfort</span>
               </h1>
