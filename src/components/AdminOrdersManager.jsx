@@ -44,7 +44,7 @@ function AdminOrdersManager({ orders, onRefreshData }) {
   }
 
   return (
-    <section className="admin-card">
+    <section className="admin-card admin-card--orders">
       <div className="section-header">
         <div>
           <h3>Orders</h3>
@@ -60,7 +60,6 @@ function AdminOrdersManager({ orders, onRefreshData }) {
         <table className="admin-table">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Customer</th>
               <th>Total (€)</th>
               <th>Status</th>
@@ -71,7 +70,6 @@ function AdminOrdersManager({ orders, onRefreshData }) {
           <tbody>
             {orders?.map((order) => (
               <tr key={order.id}>
-                <td className="mono">{order.id.slice(0, 8)}…</td>
                 <td>
                   <strong>{order.customer?.name ?? 'Guest'}</strong>
                   <br />
@@ -80,12 +78,6 @@ function AdminOrdersManager({ orders, onRefreshData }) {
                 <td>{Number(order.totals?.total ?? 0).toFixed(2)}</td>
                 <td>
                   <span className={`status-dot ${order.payment?.status ?? 'pending'}`}>
-                    {order.payment?.status ?? 'pending'}
-                  </span>
-                </td>
-                <td>{new Date(order.createdAt).toLocaleString()}</td>
-                <td>
-                  <div className="admin-actions">
                     <select
                       value={order.payment?.status ?? 'pending'}
                       onChange={(event) => handleStatusChange(order.id, event.target.value)}
@@ -96,13 +88,19 @@ function AdminOrdersManager({ orders, onRefreshData }) {
                       <option value="refunded">refunded</option>
                       <option value="cancelled">cancelled</option>
                     </select>
+                  </span>
+                </td>
+                <td>{new Date(order.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
+                <td>
+                  <div className="admin-actions">
                     <button
                       type="button"
-                      className="ghost-button"
+                      className="ghost-button ghost-button--danger"
                       onClick={() => handleDelete(order.id)}
                       disabled={deletingId === order.id}
+                      aria-label="Delete order"
                     >
-                      {deletingId === order.id ? 'Deleting…' : 'Delete'}
+                      {deletingId === order.id ? 'Deleting…' : '🗑'}
                     </button>
                   </div>
                 </td>

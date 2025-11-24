@@ -71,7 +71,7 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
   }
 
   return (
-    <section className="admin-card">
+    <section className="admin-card admin-card--menu">
       <div className="section-header">
         <div>
           <h3>Menu items</h3>
@@ -99,17 +99,20 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
                 <td>{item.description}</td>
                 <td>{Number(item.price).toFixed(2)}</td>
                 <td>
-                  <button type="button" className="ghost-button" onClick={() => handleEdit(item)}>
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className="ghost-button"
-                    onClick={() => handleDelete(item.id)}
-                    disabled={isDeleting === item.id}
-                  >
-                    {isDeleting === item.id ? 'Deleting…' : 'Delete'}
-                  </button>
+                  <div className="admin-actions">
+                    <button type="button" className="ghost-button" onClick={() => handleEdit(item)}>
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="ghost-button ghost-button--danger"
+                      onClick={() => handleDelete(item.id)}
+                      disabled={isDeleting === item.id}
+                      aria-label="Delete menu item"
+                    >
+                      {isDeleting === item.id ? 'Deleting…' : '🗑'}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -117,40 +120,34 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
         </table>
       </div>
       <form className="admin-form" onSubmit={handleSubmit}>
-        <div className="form-row">
-          <label>
-            ID
-            <input name="id" value={formState.id} onChange={handleChange} placeholder="brezel" required />
-          </label>
-          <label>
-            Emoji
-            <input name="emoji" value={formState.emoji} onChange={handleChange} placeholder="🥨" />
-          </label>
-          <label>
-            Price
-            <input
-              name="price"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formState.price}
-              onChange={handleChange}
-              placeholder="3.20"
-            />
-          </label>
-        </div>
         <label>
-          Name
+          Name:
           <input name="name" value={formState.name} onChange={handleChange} placeholder="Brezel" required />
         </label>
         <label>
-          Description
+          Description:
           <textarea
             name="description"
             value={formState.description}
             onChange={handleChange}
             placeholder="Freshly baked Bavarian pretzel."
           />
+        </label>
+        <label>
+          Price:
+          <input
+            name="price"
+            type="number"
+            min="0"
+            step="0.01"
+            value={formState.price}
+            onChange={handleChange}
+            placeholder="3.20"
+          />
+        </label>
+        <label>
+          Emoji:
+          <input name="emoji" value={formState.emoji} onChange={handleChange} placeholder="🥨" />
         </label>
         <div className="form-actions">
           <button type="submit" disabled={isSubmitting}>
