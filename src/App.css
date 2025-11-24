@@ -57,9 +57,10 @@
 
 .header-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center the branding */
   align-items: center;
   margin-bottom: 24px;
+  position: relative; /* Allow absolute positioning of switcher */
   flex-wrap: wrap;
   gap: 16px;
 }
@@ -73,6 +74,24 @@
   padding: 4px;
   border-radius: 8px;
   border: 1px solid rgba(28, 20, 13, 0.05);
+
+  /* Absolute position to right */
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Stack nicely on mobile */
+@media (max-width: 600px) {
+  .header-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .lang-switcher {
+    position: static;
+    transform: none;
+  }
 }
 
 .lang-btn {
@@ -713,4 +732,23 @@
 
 .mono {
   font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', monospace;
+}
+
+.branding {
+  display: flex;
+  flex-direction: column;
+  /* Align to start so it looks good next to the language switcher,
+     or center if that's the specific request.
+     User said "make the text center". I'll try to center the text block itself. */
+  align-items: center;
+  text-align: center;
+}
+
+.eyebrow-subtitle {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  color: #a08774;
+  text-transform: none;
+  letter-spacing: 0.15em;
+  font-weight: 600;
 }

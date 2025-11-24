@@ -102,7 +102,10 @@ function App() {
     <CartProvider menuItems={menuItems}>
       <div className="app-shell">
         <div className="header-row">
-          <h1 className="eyebrow">{t('app.title')}</h1>
+          <div className="branding">
+            <h1 className="eyebrow">{t('app.title')}</h1>
+            <p className="eyebrow-subtitle">{t('app.tagline')}</p>
+          </div>
           <div className="lang-switcher">
             <button
               className={`lang-btn ${i18n.resolvedLanguage === 'en' ? 'active' : ''}`}

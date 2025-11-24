@@ -1,6 +1,7 @@
 {
   "app": {
-    "title": "Tulamia Mini Food Shop / Tiny treats happy tummies",
+    "title": "Tulamia Mini Food Shop",
+    "tagline": "Tiny treats, happy tummies",
     "tabs": {
       "customer": "Customer view",
       "admin": "Admin"

@@ -1,6 +1,7 @@
 {
   "app": {
-    "title": "Tulamia Mini Food Shop / Kleine Leckereien, glückliche Bäuche",
+    "title": "Tulamia Mini Food Shop",
+    "tagline": "Kleine Leckereien, glückliche Bäuche",
     "tabs": {
       "customer": "Kundenansicht",
       "admin": "Verwaltung"
