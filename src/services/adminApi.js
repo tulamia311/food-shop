@@ -15,6 +15,7 @@ export async function upsertMenuItem(values) {
     id: values.id?.trim(),
     name: values.name?.trim(),
     description: values.description?.trim() || null,
+    description_i18n: values.description_i18n || null,
     price: Number(values.price ?? 0),
     emoji: values.emoji?.trim() || null,
     tags: Array.isArray(values.tags) ? values.tags : null,

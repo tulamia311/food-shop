@@ -1,13 +1,18 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { upsertMenuItem, deleteMenuItem } from '../services/adminApi'
 import { useAuth } from '../context/AuthContext.jsx'
 
 function AdminMenuManager({ menuItems, onRefreshData }) {
+  const { t, i18n } = useTranslation()
+  const isGerman = i18n.resolvedLanguage?.startsWith('de')
+
   const [formState, setFormState] = useState({
     id: '',
     name: '',
     price: '',
-    description: '',
+    description_en: '',
+    description_de: '',
     emoji: '',
   })
   const [status, setStatus] = useState(null)
@@ -25,28 +30,39 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
       id: item.id,
       name: item.name ?? '',
       price: item.price ?? '',
-      description: item.description ?? '',
+      description_en: item.description_i18n?.en || item.description || '',
+      description_de: item.description_i18n?.de || '',
       emoji: item.emoji ?? '',
     })
-    setStatus('Editing existing dish…')
+    setStatus(t('admin_menu.editing'))
   }
 
   async function handleSubmit(event) {
     event.preventDefault()
     if (!isAdmin) {
-      setStatus('Admin session required to save menu items.')
+      setStatus(t('admin_menu.require_admin_save'))
       return
     }
 
     setIsSubmitting(true)
-    setStatus('Saving to Supabase…')
-    const { error } = await upsertMenuItem(formState)
+    setStatus(t('admin_menu.saving'))
+
+    const payload = {
+      ...formState,
+      description: formState.description_en, // Sync English to old column for safety
+      description_i18n: {
+        en: formState.description_en,
+        de: formState.description_de,
+      },
+    }
+
+    const { error } = await upsertMenuItem(payload)
     if (error) {
       console.error('[Admin] Failed to save menu item', error)
-      setStatus(error.message ?? 'Failed to save menu item')
+      setStatus(error.message ?? t('admin_menu.error_save'))
     } else {
-      setStatus('Menu item saved ✅')
-      setFormState({ id: '', name: '', price: '', description: '', emoji: '' })
+      setStatus(t('admin_menu.saved_success'))
+      setFormState({ id: '', name: '', price: '', description_en: '', description_de: '', emoji: '' })
       onRefreshData?.()
     }
     setIsSubmitting(false)
@@ -54,17 +70,17 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
 
   async function handleDelete(id) {
     if (!isAdmin) {
-      setStatus('Admin session required to delete menu items.')
+      setStatus(t('admin_menu.require_admin_delete'))
       return
     }
-    if (!window.confirm('Delete this menu item?')) return
+    if (!window.confirm(t('admin_menu.confirm_delete'))) return
     setIsDeleting(id)
     const { error } = await deleteMenuItem(id)
     if (error) {
       console.error('[Admin] Failed to delete menu item', error)
-      setStatus(error.message ?? 'Failed to delete menu item')
+      setStatus(error.message ?? t('admin_menu.error_delete'))
     } else {
-      setStatus('Menu item deleted ✅')
+      setStatus(t('admin_menu.deleted_success'))
       onRefreshData?.()
     }
     setIsDeleting(null)
@@ -74,9 +90,9 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
     <section className="admin-card admin-card--menu">
       <div className="section-header">
         <div>
-          <h3>Menu items</h3>
+          <h3>{t('admin_menu.title')}</h3>
           <p className="admin-help-text">
-            Add or update dishes directly in Supabase. Select a row to edit, or delete it from the table.
+            {t('admin_menu.help_text')}
           </p>
         </div>
       </div>
@@ -84,11 +100,11 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
         <table className="admin-table">
           <thead>
             <tr>
-              <th>Emoji</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Price (€)</th>
-              <th>Actions</th>
+              <th>{t('admin_menu.headers.emoji')}</th>
+              <th>{t('admin_menu.headers.name')}</th>
+              <th>{t('admin_menu.headers.description')}</th>
+              <th>{t('admin_menu.headers.price')}</th>
+              <th>{t('admin_menu.headers.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -96,12 +112,36 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
               <tr key={item.id}>
                 <td>{item.emoji}</td>
                 <td>{item.name}</td>
-                <td>{item.description}</td>
+                <td>
+                  {isGerman ? (
+                    <>
+                      {item.description_i18n?.de && (
+                        <div>
+                          <strong>DE:</strong> {item.description_i18n.de}
+                        </div>
+                      )}
+                      <div className="admin-subtle" style={{ marginTop: item.description_i18n?.de ? '4px' : '0' }}>
+                        <strong>EN:</strong> {item.description_i18n?.en || item.description}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <strong>EN:</strong> {item.description_i18n?.en || item.description}
+                      </div>
+                      {item.description_i18n?.de && (
+                        <div className="admin-subtle" style={{ marginTop: '4px' }}>
+                          <strong>DE:</strong> {item.description_i18n.de}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </td>
                 <td>{Number(item.price).toFixed(2)}</td>
                 <td>
                   <div className="admin-actions">
                     <button type="button" className="ghost-button" onClick={() => handleEdit(item)}>
-                      Edit
+                      {t('admin_menu.edit')}
                     </button>
                     <button
                       type="button"
@@ -110,7 +150,7 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
                       disabled={isDeleting === item.id}
                       aria-label="Delete menu item"
                     >
-                      {isDeleting === item.id ? 'Deleting…' : '🗑'}
+                      {isDeleting === item.id ? t('admin_menu.deleting') : '🗑'}
                     </button>
                   </div>
                 </td>
@@ -121,20 +161,29 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
       </div>
       <form className="admin-form" onSubmit={handleSubmit}>
         <label>
-          Name:
+          {t('admin_menu.labels.name')}
           <input name="name" value={formState.name} onChange={handleChange} placeholder="Brezel" required />
         </label>
         <label>
-          Description:
+          {t('admin_menu.labels.description_en')}
           <textarea
-            name="description"
-            value={formState.description}
+            name="description_en"
+            value={formState.description_en}
             onChange={handleChange}
             placeholder="Freshly baked Bavarian pretzel."
           />
         </label>
         <label>
-          Price:
+          {t('admin_menu.labels.description_de')}
+          <textarea
+            name="description_de"
+            value={formState.description_de}
+            onChange={handleChange}
+            placeholder="Frisch gebackene bayerische Brezel."
+          />
+        </label>
+        <label>
+          {t('admin_menu.labels.price')}
           <input
             name="price"
             type="number"
@@ -146,12 +195,12 @@ function AdminMenuManager({ menuItems, onRefreshData }) {
           />
         </label>
         <label>
-          Emoji:
+          {t('admin_menu.labels.emoji')}
           <input name="emoji" value={formState.emoji} onChange={handleChange} placeholder="🥨" />
         </label>
         <div className="form-actions">
           <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Saving…' : 'Save menu item'}
+            {isSubmitting ? t('admin_menu.saving') : t('admin_menu.save')}
           </button>
           {status && <p className="admin-help-text">{status}</p>}
         </div>
