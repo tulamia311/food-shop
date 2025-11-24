@@ -9,6 +9,7 @@ import defaultMenuItems from './data/menuItems'
 import { fetchMenuItems, fetchOrders } from './services/dataApi'
 import AdminDashboard from './components/AdminDashboard.jsx'
 import { useAuth } from './context/AuthContext.jsx'
+import ThemeToggle from './components/ThemeToggle'
 
 const currency = new Intl.NumberFormat('de-DE', {
   style: 'currency',
@@ -286,6 +287,7 @@ function App() {
           />
         )}
 
+        <ThemeToggle />
       </div>
     </CartProvider>
   )
