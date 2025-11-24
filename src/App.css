@@ -52,8 +52,54 @@
   font-size: 0.85rem;
   letter-spacing: 0.2em;
   color: #cf5c36;
-  margin-bottom: 16px;
-  text-align: center;
+  margin: 0;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(28, 20, 13, 0.05);
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: #a08774;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+}
+
+.lang-btn.active {
+  color: #cf5c36;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(28, 20, 13, 0.05);
+}
+
+.lang-btn:hover:not(.active) {
+  color: #5c4633;
+}
+
+.divider {
+  color: rgba(28, 20, 13, 0.15);
+  font-size: 0.8rem;
 }
 
 .hero h1 {

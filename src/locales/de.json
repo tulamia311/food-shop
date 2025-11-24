@@ -1,0 +1,146 @@
+{
+  "app": {
+    "title": "Tulamia Mini Food Shop / Kleine Leckereien, glückliche Bäuche",
+    "tabs": {
+      "customer": "Kundenansicht",
+      "admin": "Verwaltung"
+    },
+    "status": {
+      "loading_menu": "Lade aktuelles Menü …",
+      "loading_orders": "Laden…",
+      "error_typo3": "Daten konnten nicht von TYPO3 geladen werden",
+      "error_api_empty": "Remote-API antwortete ohne Menüelemente. Zeige lokale Standards."
+    }
+  },
+  "shop": {
+    "menu_title": "Tageskarte",
+    "menu_subtitle": "Tippe auf ein Gericht, um es in den Warenkorb zu legen.",
+    "hero_copy": "Bestelle frisch zubereitete Street-Food-Favoriten — abholbereit in 15 Minuten oder direkt an deine Haustür geliefert.",
+    "latest_orders": "Neueste Bestellungen",
+    "no_orders": "Noch keine Bestellungen. Gib deine erste Bestellung auf, um sie hier zu sehen.",
+    "guest": "Gast",
+    "pickup": "Abholung"
+  },
+  "cart": {
+    "title": "Dein Warenkorb",
+    "clear": "Leeren",
+    "empty_state": "Füge etwas Leckeres hinzu, um zu beginnen.",
+    "remove": "Entfernen",
+    "subtotal": "Zwischensumme",
+    "service_fee": "Servicegebühr",
+    "total": "Gesamt"
+  },
+  "receipt": {
+    "title": "Rechnungsübersicht",
+    "print": "Rechnung drucken",
+    "order_id": "Bestell-Nr.",
+    "payment": "Zahlung",
+    "customer": "Kunde",
+    "fulfillment": "Abwicklung",
+    "subtotal": "Zwischensumme",
+    "service_fee": "Servicegebühr",
+    "delivery_fee": "Liefergebühr",
+    "total": "Gesamt"
+  },
+  "checkout": {
+    "title": "Kasse",
+    "name": "Name",
+    "name_placeholder": "Name des Gastes",
+    "email": "E-Mail",
+    "email_placeholder": "kontakt@beispiel.de",
+    "fulfillment": "Abwicklung",
+    "pickup": "Abholung (15 Min)",
+    "delivery": "Lieferung (+€3)",
+    "payment_method": "Zahlungsmethode",
+    "payment_cash": "Barzahlung",
+    "payment_paypal": "PayPal",
+    "payment_maestro": "Maestro-Karte",
+    "payment_credit": "Kreditkarte",
+    "paypal_unavailable": "PayPal ist in dieser Umgebung nicht verfügbar.",
+    "notes": "Anmerkungen",
+    "notes_placeholder": "Keine Zwiebeln, extra Sesam, etc.",
+    "loading_paypal": "Lade PayPal…",
+    "sending": "Senden…",
+    "place_order": "Bestellung aufgeben",
+    "error_contact_info": "Bitte geben Sie Ihre Kontaktdaten ein und wählen Sie mindestens ein Gericht, bevor Sie mit PayPal bezahlen.",
+    "error_paypal_failed": "PayPal-Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut oder wählen Sie eine andere Methode."
+  },
+  "menu": {
+    "add_to_cart": "In den Warenkorb",
+    "tag_fresh": "frisch"
+  },
+  "admin": {
+    "loading_session": "Prüfe Admin-Sitzung …",
+    "restricted_area": "Geschützter Bereich",
+    "login_title": "Admin-Login",
+    "login_help": "Melden Sie sich mit dem Supabase-Admin-Konto an, um die Menü- und Bestellverwaltung freizuschalten."
+  },
+  "auth": {
+    "checking_session": "Prüfe Sitzung …",
+    "signed_in_as": "Angemeldet als",
+    "sign_out": "Abmelden",
+    "signing_in": "Anmelden …",
+    "signed_in_redirecting": "Angemeldet! Weiterleitung …",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "sign_in": "Anmelden"
+  },
+  "admin_menu": {
+    "title": "Menüelemente",
+    "help_text": "Gerichte direkt in Supabase hinzufügen oder aktualisieren. Wählen Sie eine Zeile zum Bearbeiten oder Löschen.",
+    "editing": "Bearbeite Gericht…",
+    "saving": "Speichern…",
+    "save": "Menüelement speichern",
+    "deleting": "Löschen…",
+    "edit": "Bearbeiten",
+    "saved_success": "Menüelement gespeichert ✅",
+    "deleted_success": "Menüelement gelöscht ✅",
+    "error_save": "Fehler beim Speichern",
+    "error_delete": "Fehler beim Löschen",
+    "confirm_delete": "Dieses Element löschen?",
+    "require_admin_save": "Admin-Sitzung erforderlich zum Speichern.",
+    "require_admin_delete": "Admin-Sitzung erforderlich zum Löschen.",
+    "headers": {
+      "emoji": "Emoji",
+      "name": "Name",
+      "description": "Beschreibung",
+      "price": "Preis (€)",
+      "actions": "Aktionen"
+    },
+    "labels": {
+      "name": "Name:",
+      "description": "Beschreibung:",
+      "description_en": "Beschreibung (EN):",
+      "description_de": "Beschreibung (DE):",
+      "price": "Preis:",
+      "emoji": "Emoji:"
+    }
+  },
+  "admin_orders": {
+    "title": "Bestellungen",
+    "help_text": "Überprüfen und verwalten Sie aktuelle Bestellungen. Aktualisieren Sie den Zahlungsstatus oder löschen Sie Einträge.",
+    "refresh": "Daten aktualisieren",
+    "guest": "Gast",
+    "headers": {
+      "customer": "Kunde",
+      "total": "Summe (€)",
+      "status": "Status",
+      "created": "Erstellt",
+      "actions": "Aktionen"
+    },
+    "status": {
+      "pending": "ausstehend",
+      "paid": "bezahlt",
+      "refunded": "erstattet",
+      "cancelled": "storniert"
+    },
+    "deleting": "Löschen…",
+    "update_success": "Bestellstatus aktualisiert ✅",
+    "delete_success": "Bestellung gelöscht ✅",
+    "error_update": "Fehler beim Aktualisieren des Status",
+    "error_delete": "Fehler beim Löschen der Bestellung",
+    "confirm_delete": "Diese Bestellung löschen? Dies kann nicht rückgängig gemacht werden.",
+    "require_admin_update": "Admin-Sitzung erforderlich zum Aktualisieren.",
+    "require_admin_delete": "Admin-Sitzung erforderlich zum Löschen."
+  }
+}

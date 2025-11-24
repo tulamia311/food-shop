@@ -1,13 +1,15 @@
+import { useTranslation } from 'react-i18next'
 import AdminLoginForm from './AdminLoginForm.jsx'
 import AdminMenuManager from './AdminMenuManager.jsx'
 import AdminOrdersManager from './AdminOrdersManager.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 
 function AdminDashboard({ menuItems, orders, onRefreshData }) {
+  const { t } = useTranslation()
   const { isAdmin, authLoading } = useAuth()
 
   if (authLoading) {
-    return <p className="admin-help-text">Checking admin session …</p>
+    return <p className="admin-help-text">{t('admin.loading_session')}</p>
   }
 
   if (!isAdmin) {
@@ -15,12 +17,12 @@ function AdminDashboard({ menuItems, orders, onRefreshData }) {
       <section className="admin-card">
         <div className="section-header">
           <div>
-            <p className="eyebrow">Restricted area</p>
-            <h2>Admin login</h2>
+            <p className="eyebrow">{t('admin.restricted_area')}</p>
+            <h2>{t('admin.login_title')}</h2>
           </div>
         </div>
         <p className="admin-help-text">
-          Sign in with the Supabase admin account to unlock menu and order management tools.
+          {t('admin.login_help')}
         </p>
         <AdminLoginForm />
       </section>

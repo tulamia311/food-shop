@@ -1,0 +1,146 @@
+{
+  "app": {
+    "title": "Tulamia Mini Food Shop / Tiny treats happy tummies",
+    "tabs": {
+      "customer": "Customer view",
+      "admin": "Admin"
+    },
+    "status": {
+      "loading_menu": "Loading live menu …",
+      "loading_orders": "Loading…",
+      "error_typo3": "Failed to load data from TYPO3",
+      "error_api_empty": "Remote API responded without menu items. Showing local defaults."
+    }
+  },
+  "shop": {
+    "menu_title": "Today's menu",
+    "menu_subtitle": "Tap a dish to drop it into your basket.",
+    "hero_copy": "Order freshly prepared street-food favorites — ready for pickup in 15 minutes or delivered to your door.",
+    "latest_orders": "Latest orders",
+    "no_orders": "No orders yet. Place your first order to see it here.",
+    "guest": "Guest",
+    "pickup": "pickup"
+  },
+  "cart": {
+    "title": "Your basket",
+    "clear": "Clear",
+    "empty_state": "Add something tasty to get started.",
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "service_fee": "Service fee",
+    "total": "Total"
+  },
+  "receipt": {
+    "title": "Bill overview",
+    "print": "Print bill",
+    "order_id": "Order ID",
+    "payment": "Payment",
+    "customer": "Customer",
+    "fulfillment": "Fulfillment",
+    "subtotal": "Subtotal",
+    "service_fee": "Service fee",
+    "delivery_fee": "Delivery fee",
+    "total": "Total"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "name": "Name",
+    "name_placeholder": "Guest name",
+    "email": "Email",
+    "email_placeholder": "contact@example.com",
+    "fulfillment": "Fulfillment",
+    "pickup": "Pickup (15 min)",
+    "delivery": "Delivery (+€3)",
+    "payment_method": "Payment method",
+    "payment_cash": "Cash",
+    "payment_paypal": "PayPal",
+    "payment_maestro": "Maestro card",
+    "payment_credit": "Credit card",
+    "paypal_unavailable": "PayPal is not available in this environment.",
+    "notes": "Notes",
+    "notes_placeholder": "No onions, extra sesame, etc.",
+    "loading_paypal": "Loading PayPal…",
+    "sending": "Sending…",
+    "place_order": "Place order",
+    "error_contact_info": "Please add your contact info and at least one dish before paying with PayPal.",
+    "error_paypal_failed": "PayPal checkout failed. Please try again or use another method."
+  },
+  "menu": {
+    "add_to_cart": "Add to cart",
+    "tag_fresh": "fresh"
+  },
+  "admin": {
+    "loading_session": "Checking admin session …",
+    "restricted_area": "Restricted area",
+    "login_title": "Admin login",
+    "login_help": "Sign in with the Supabase admin account to unlock menu and order management tools."
+  },
+  "auth": {
+    "checking_session": "Checking session …",
+    "signed_in_as": "Signed in as",
+    "sign_out": "Sign out",
+    "signing_in": "Signing in …",
+    "signed_in_redirecting": "Signed in! Redirecting …",
+    "email": "Email",
+    "password": "Password",
+    "sign_in": "Sign in"
+  },
+  "admin_menu": {
+    "title": "Menu items",
+    "help_text": "Add or update dishes directly in Supabase. Select a row to edit, or delete it from the table.",
+    "editing": "Editing existing dish…",
+    "saving": "Saving…",
+    "save": "Save menu item",
+    "deleting": "Deleting…",
+    "edit": "Edit",
+    "saved_success": "Menu item saved ✅",
+    "deleted_success": "Menu item deleted ✅",
+    "error_save": "Failed to save menu item",
+    "error_delete": "Failed to delete menu item",
+    "confirm_delete": "Delete this menu item?",
+    "require_admin_save": "Admin session required to save menu items.",
+    "require_admin_delete": "Admin session required to delete menu items.",
+    "headers": {
+      "emoji": "Emoji",
+      "name": "Name",
+      "description": "Description",
+      "price": "Price (€)",
+      "actions": "Actions"
+    },
+    "labels": {
+      "name": "Name:",
+      "description": "Description:",
+      "description_en": "Description (EN):",
+      "description_de": "Description (DE):",
+      "price": "Price:",
+      "emoji": "Emoji:"
+    }
+  },
+  "admin_orders": {
+    "title": "Orders",
+    "help_text": "Review and take action on recent orders. Update payment status or delete records.",
+    "refresh": "Refresh data",
+    "guest": "Guest",
+    "headers": {
+      "customer": "Customer",
+      "total": "Total (€)",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "status": {
+      "pending": "pending",
+      "paid": "paid",
+      "refunded": "refunded",
+      "cancelled": "cancelled"
+    },
+    "deleting": "Deleting…",
+    "update_success": "Order status updated ✅",
+    "delete_success": "Order deleted ✅",
+    "error_update": "Failed to update order status",
+    "error_delete": "Failed to delete order",
+    "confirm_delete": "Delete this order? This cannot be undone.",
+    "require_admin_update": "Admin session required to update orders.",
+    "require_admin_delete": "Admin session required to delete orders."
+  }
+}

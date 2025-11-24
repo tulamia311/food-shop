@@ -1,28 +1,30 @@
+import { useTranslation } from 'react-i18next'
 import { useCart } from '../context/CartContext'
 
-const currency = new Intl.NumberFormat('de-DE', {
-  style: 'currency',
-  currency: 'EUR',
-})
-
 function CartSummary() {
+  const { t, i18n } = useTranslation()
   const { cartLines, subtotal, updateItem, removeItem, clearCart } = useCart()
   const serviceFee = subtotal > 0 ? 1.5 : 0
   const total = subtotal + serviceFee
 
+  const currency = new Intl.NumberFormat(i18n.language === 'en' ? 'en-US' : 'de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+  })
+
   return (
     <section className="cart-card">
       <div className="section-header">
-        <h2>Your basket</h2>
+        <h2>{t('cart.title')}</h2>
         {cartLines.length > 0 && (
           <button type="button" className="ghost-button" onClick={clearCart}>
-            Clear
+            {t('cart.clear')}
           </button>
         )}
       </div>
 
       {cartLines.length === 0 ? (
-        <p className="empty-state">Add something tasty to get started.</p>
+        <p className="empty-state">{t('cart.empty_state')}</p>
       ) : (
         <ul className="cart-lines">
           {cartLines.map((line) => (
@@ -40,7 +42,7 @@ function CartSummary() {
                   +
                 </button>
                 <button type="button" className="ghost" onClick={() => removeItem(line.id)}>
-                  Remove
+                  {t('cart.remove')}
                 </button>
               </div>
               <p className="cart-line-total">{currency.format(line.lineTotal)}</p>
@@ -51,15 +53,15 @@ function CartSummary() {
 
       <div className="totals">
         <div>
-          <span>Subtotal</span>
+          <span>{t('cart.subtotal')}</span>
           <span>{currency.format(subtotal)}</span>
         </div>
         <div>
-          <span>Service fee</span>
+          <span>{t('cart.service_fee')}</span>
           <span>{currency.format(serviceFee)}</span>
         </div>
         <div className="totals-grand">
-          <span>Total</span>
+          <span>{t('cart.total')}</span>
           <span>{currency.format(total)}</span>
         </div>
       </div>

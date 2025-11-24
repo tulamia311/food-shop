@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useCart } from '../context/CartContext'
 import { saveOrder } from '../services/dataApi'
 import { supabase, isSupabaseEnabled } from '../services/supabaseClient'
@@ -15,6 +16,7 @@ const initialFormState = {
 }
 
 function CheckoutForm({ onOrderSaved }) {
+  const { t } = useTranslation()
   const { cartLines, subtotal, clearCart } = useCart()
   const [formData, setFormData] = useState(initialFormState)
   const [orderState, setOrderState] = useState({ sending: false, success: null, error: null })
@@ -64,9 +66,9 @@ function CheckoutForm({ onOrderSaved }) {
     script.async = true
     script.dataset.paypalSdk = 'true'
     script.onload = () => setPaypalReady(true)
-    script.onerror = () => setPaypalError('Failed to load PayPal. Please refresh or choose another method.')
+    script.onerror = () => setPaypalError(t('checkout.error_paypal_failed'))
     document.head.appendChild(script)
-  }, [paypalEnabled])
+  }, [paypalEnabled, t])
 
   const handlePayPalApproval = useCallback(async (paypalOrderId) => {
     if (!supabase) {
@@ -120,10 +122,10 @@ function CheckoutForm({ onOrderSaved }) {
       setOrderState({
         sending: false,
         success: null,
-        error: error.message || 'PayPal capture failed. Please try again or choose another method.',
+        error: error.message || t('checkout.error_paypal_failed'),
       })
     }
-  }, [cartLines, clearCart, formData, onOrderSaved, totals])
+  }, [cartLines, clearCart, formData, onOrderSaved, totals, t])
 
   useEffect(() => {
     if (!showPayPalButtons || !paypalReady || typeof window === 'undefined' || !window.paypal) return
@@ -143,7 +145,7 @@ function CheckoutForm({ onOrderSaved }) {
         if (!canSubmit) {
           setOrderState((prev) => ({
             ...prev,
-            error: 'Please add your contact info and at least one dish before paying with PayPal.',
+            error: t('checkout.error_contact_info'),
           }))
           return actions.reject ? actions.reject() : undefined
         }
@@ -168,7 +170,7 @@ function CheckoutForm({ onOrderSaved }) {
         setOrderState({
           sending: false,
           success: null,
-          error: 'PayPal checkout failed. Please try again or use another method.',
+          error: t('checkout.error_paypal_failed'),
         })
       },
     })
@@ -178,7 +180,7 @@ function CheckoutForm({ onOrderSaved }) {
     return () => {
       buttons.close()
     }
-  }, [canSubmit, formData.name, handlePayPalApproval, paypalReady, showPayPalButtons, totals.total])
+  }, [canSubmit, formData.name, handlePayPalApproval, paypalReady, showPayPalButtons, totals.total, t])
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -225,49 +227,49 @@ function CheckoutForm({ onOrderSaved }) {
 
   return (
     <section className="checkout-card">
-      <h2>Checkout</h2>
+      <h2>{t('checkout.title')}</h2>
       <form className="checkout-form" onSubmit={handleSubmit}>
         <label>
-          Name
+          {t('checkout.name')}
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Guest name"
+            placeholder={t('checkout.name_placeholder')}
             required
           />
         </label>
         <label>
-          Email
+          {t('checkout.email')}
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="contact@example.com"
+            placeholder={t('checkout.email_placeholder')}
             required
           />
         </label>
         <label>
-          Fulfillment
+          {t('checkout.fulfillment')}
           <select name="fulfillment" value={formData.fulfillment} onChange={handleChange}>
-            <option value="pickup">Pickup (15 min)</option>
-            <option value="delivery">Delivery (+€3)</option>
+            <option value="pickup">{t('checkout.pickup')}</option>
+            <option value="delivery">{t('checkout.delivery')}</option>
           </select>
         </label>
         <label>
-          Payment method
+          {t('checkout.payment_method')}
           <select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange}>
-            <option value="cash">Cash</option>
-            <option value="paypal">PayPal</option>
-            <option value="maestro">Maestro card</option>
-            <option value="credit-card">Credit card</option>
+            <option value="cash">{t('checkout.payment_cash')}</option>
+            <option value="paypal">{t('checkout.payment_paypal')}</option>
+            <option value="maestro">{t('checkout.payment_maestro')}</option>
+            <option value="credit-card">{t('checkout.payment_credit')}</option>
           </select>
         </label>
         {formData.paymentMethod === 'paypal' && !paypalEnabled && (
           <p className="status-banner error">
-            PayPal is not available in this environment.
+            {t('checkout.paypal_unavailable')}
             {!PAYPAL_ENV_FLAG && ' Reason: VITE_ENABLE_PAYPAL is not set to "true".'}
             {PAYPAL_ENV_FLAG && !PAYPAL_CLIENT_ID && ' Reason: VITE_PAYPAL_CLIENT_ID is missing.'}
             {PAYPAL_ENV_FLAG && PAYPAL_CLIENT_ID && !supabaseAvailable &&
@@ -275,19 +277,19 @@ function CheckoutForm({ onOrderSaved }) {
           </p>
         )}
         <label>
-          Notes
+          {t('checkout.notes')}
           <textarea
             name="notes"
             rows="3"
             value={formData.notes}
             onChange={handleChange}
-            placeholder="No onions, extra sesame, etc."
+            placeholder={t('checkout.notes_placeholder')}
           />
         </label>
 
         {showPayPalButtons && (
           <div className="paypal-section">
-            {!paypalReady && !paypalError && <p className="status-banner">Loading PayPal…</p>}
+            {!paypalReady && !paypalError && <p className="status-banner">{t('checkout.loading_paypal')}</p>}
             {paypalError && <p className="status-banner error">{paypalError}</p>}
             <div ref={paypalButtonsRef} />
           </div>
@@ -295,7 +297,7 @@ function CheckoutForm({ onOrderSaved }) {
 
         {(!showPayPalButtons || formData.paymentMethod !== 'paypal') && (
           <button type="submit" className="primary" disabled={!canSubmit || orderState.sending}>
-            {orderState.sending ? 'Sending…' : 'Place order'}
+            {orderState.sending ? t('checkout.sending') : t('checkout.place_order')}
           </button>
         )}
         {orderState.success && <p className="status-banner success">{orderState.success}</p>}

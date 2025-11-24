@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import './App.css'
 import { CartProvider } from './context/CartContext'
 import MenuGrid from './components/MenuGrid'
@@ -14,15 +15,16 @@ const currency = new Intl.NumberFormat('de-DE', {
   currency: 'EUR',
 })
 
-function formatOrderDate(isoDate) {
+function formatOrderDate(isoDate, locale = 'de-DE') {
   if (!isoDate) return '—'
   const date = new Date(isoDate)
-  const time = date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })
-  const day = date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  const time = date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
+  const day = date.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' })
   return `${time} Uhr ${day}`
 }
 
 function App() {
+  const { t, i18n } = useTranslation()
   const [menuItems, setMenuItems] = useState(defaultMenuItems)
   const [status, setStatus] = useState({ loading: true, error: null, source: 'local' })
   const [orders, setOrders] = useState([])
@@ -47,7 +49,7 @@ function App() {
         } else {
           setStatus({
             loading: false,
-            error: 'Remote API responded without menu items. Showing local defaults.',
+            error: t('app.status.error_api_empty'),
             source: 'local',
           })
         }
@@ -55,7 +57,7 @@ function App() {
         if (!isMounted) return
         setStatus({
           loading: false,
-          error: error.message || 'Failed to load data from TYPO3',
+          error: error.message || t('app.status.error_typo3'),
           source: 'local',
         })
       }
@@ -91,44 +93,65 @@ function App() {
     setRefreshOrders((prev) => !prev)
   }
 
+  const currency = new Intl.NumberFormat(i18n.language === 'en' ? 'en-US' : 'de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+  })
+
   return (
     <CartProvider menuItems={menuItems}>
       <div className="app-shell">
-        <h1 className="eyebrow">Tulamia Mini Food Shop / Tiny treats happy tummies</h1>
+        <div className="header-row">
+          <h1 className="eyebrow">{t('app.title')}</h1>
+          <div className="lang-switcher">
+            <button
+              className={`lang-btn ${i18n.resolvedLanguage === 'en' ? 'active' : ''}`}
+              onClick={() => i18n.changeLanguage('en')}
+            >
+              EN
+            </button>
+            <span className="divider">|</span>
+            <button
+              className={`lang-btn ${i18n.resolvedLanguage === 'de' ? 'active' : ''}`}
+              onClick={() => i18n.changeLanguage('de')}
+            >
+              DE
+            </button>
+          </div>
+        </div>
         <nav className="tab-bar">
           <button
             type="button"
             className={`tab-button ${activeTab === 'shop' ? 'active' : ''}`}
             onClick={() => setActiveTab('shop')}
           >
-            Customer view
+            {t('app.tabs.customer')}
           </button>
           <button
             type="button"
             className={`tab-button ${activeTab === 'admin' ? 'active' : ''}`}
             onClick={() => setActiveTab('admin')}
           >
-            Admin {isAdmin ? '' : '🔒'}
+            {t('app.tabs.admin')} {isAdmin ? '' : '🔒'}
           </button>
         </nav>
 
         {activeTab === 'shop' && (
           <>
             <div className="status-stack">
-              {status.loading && <div className="status-banner">Loading live menu …</div>}
+              {status.loading && <div className="status-banner">{t('app.status.loading_menu')}</div>}
               {status.error && <div className="status-banner error">{status.error}</div>}
             </div>
 
             <main className="shop-layout">
               <section className="menu-section">
                 <div className="section-header">
-                  <h2>Today&apos;s menu</h2>
-                  <p>Tap a dish to drop it into your basket.</p>
+                  <h2>{t('shop.menu_title')}</h2>
+                  <p>{t('shop.menu_subtitle')}</p>
                 </div>
                 <MenuGrid />
                 <p className="hero-copy">
-                  Order freshly prepared street-food favorites — ready for pickup in 15 minutes or
-                  delivered to your door.
+                  {t('shop.hero_copy')}
                 </p>
               </section>
 
@@ -141,29 +164,29 @@ function App() {
             {lastOrder && (
               <section className="receipt-card">
                 <div className="section-header">
-                  <h2>Bill overview</h2>
+                  <h2>{t('receipt.title')}</h2>
                   <button type="button" className="ghost-button" onClick={() => window.print()}>
-                    Print bill
+                    {t('receipt.print')}
                   </button>
                 </div>
                 <div className="receipt-grid">
                   <div>
-                    <p className="receipt-label">Order ID</p>
+                    <p className="receipt-label">{t('receipt.order_id')}</p>
                     <p className="receipt-value">{lastOrder.id}</p>
                   </div>
                   <div>
-                    <p className="receipt-label">Payment</p>
+                    <p className="receipt-label">{t('receipt.payment')}</p>
                     <p className="receipt-value">{lastOrder.payment?.provider ?? 'n/a'}</p>
                   </div>
                 </div>
                 <div className="receipt-grid">
                   <div>
-                    <p className="receipt-label">Customer</p>
+                    <p className="receipt-label">{t('receipt.customer')}</p>
                     <p className="receipt-value">{lastOrder.customer?.name}</p>
                     <p className="receipt-subtle">{lastOrder.customer?.email}</p>
                   </div>
                   <div>
-                    <p className="receipt-label">Fulfillment</p>
+                    <p className="receipt-label">{t('receipt.fulfillment')}</p>
                     <p className="receipt-value">{lastOrder.customer?.fulfillment}</p>
                   </div>
                 </div>
@@ -179,21 +202,21 @@ function App() {
                 </ul>
                 <div className="receipt-totals">
                   <div>
-                    <span>Subtotal</span>
+                    <span>{t('receipt.subtotal')}</span>
                     <span>{currency.format(lastOrder.totals?.subtotal ?? 0)}</span>
                   </div>
                   <div>
-                    <span>Service fee</span>
+                    <span>{t('receipt.service_fee')}</span>
                     <span>{currency.format(lastOrder.totals?.serviceFee ?? 0)}</span>
                   </div>
                   {lastOrder.totals?.deliveryFee ? (
                     <div>
-                      <span>Delivery fee</span>
+                      <span>{t('receipt.delivery_fee')}</span>
                       <span>{currency.format(lastOrder.totals.deliveryFee)}</span>
                     </div>
                   ) : null}
                   <div className="totals-grand">
-                    <span>Total</span>
+                    <span>{t('receipt.total')}</span>
                     <span>{currency.format(lastOrder.totals?.total ?? 0)}</span>
                   </div>
                 </div>
@@ -202,12 +225,12 @@ function App() {
 
             <section className="orders-card">
               <div className="section-header">
-                <h2>Latest orders</h2>
-                {ordersStatus.loading && <span className="pill">Loading…</span>}
+                <h2>{t('shop.latest_orders')}</h2>
+                {ordersStatus.loading && <span className="pill">{t('app.status.loading_orders')}</span>}
                 {ordersStatus.error && <span className="pill error">{ordersStatus.error}</span>}
               </div>
               {orders.length === 0 ? (
-                <p className="empty-state">No orders yet. Place your first order to see it here.</p>
+                <p className="empty-state">{t('shop.no_orders')}</p>
               ) : (
                 <ul className="orders-list">
                   {orders.slice(-5).reverse().map((order) => (
@@ -218,8 +241,8 @@ function App() {
                             🍱
                           </span>
                           <div>
-                            <p className="order-customer">{order.customer?.name ?? 'Guest'}</p>
-                            <p className="order-subline">{order.customer?.fulfillment ?? 'pickup'}</p>
+                            <p className="order-customer">{order.customer?.name ?? t('shop.guest')}</p>
+                            <p className="order-subline">{order.customer?.fulfillment ?? t('shop.pickup')}</p>
                           </div>
                         </div>
                         <div className="order-meta">
@@ -241,7 +264,7 @@ function App() {
                         ))}
                       </ul>
                       <div className="order-card-footer">
-                        <span className="order-timestamp">{formatOrderDate(order.createdAt)}</span>
+                        <span className="order-timestamp">{formatOrderDate(order.createdAt, i18n.language === 'en' ? 'en-US' : 'de-DE')}</span>
                       </div>
                     </li>
                   ))}
