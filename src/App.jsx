@@ -30,9 +30,6 @@ function App() {
   const [refreshOrders, setRefreshOrders] = useState(false)
   const [lastOrder, setLastOrder] = useState(null)
   const [activeTab, setActiveTab] = useState('shop')
-  const [heroCopyText, setHeroCopyText] = useState('')
-  const [heroTitleText, setHeroTitleText] = useState('')
-  const [heroPhase, setHeroPhase] = useState('copyTyping') // 'copyTyping' | 'copyDeleting' | 'titleTyping' | 'done'
   const { isAdmin, authLoading } = useAuth()
 
   useEffect(() => {
@@ -85,45 +82,6 @@ function App() {
     }
   }, [refreshOrders])
 
-  // Hero typing animation (single-step timeouts to keep CPU usage low)
-  useEffect(() => {
-    const fullCopy =
-      'Order freshly prepared street-food favorites — ready for pickup in 15 minutes or delivered to your door.'
-    const fullTitle = 'Tiny treats, happy tummies'
-
-    let timeoutId
-
-    if (heroPhase === 'copyTyping') {
-      if (heroCopyText.length >= fullCopy.length) {
-        timeoutId = window.setTimeout(() => setHeroPhase('copyDeleting'), 200)
-      } else {
-        timeoutId = window.setTimeout(() => {
-          setHeroCopyText(fullCopy.slice(0, heroCopyText.length + 1))
-        }, 15)
-      }
-    } else if (heroPhase === 'copyDeleting') {
-      if (heroCopyText.length === 0) {
-        timeoutId = window.setTimeout(() => setHeroPhase('titleTyping'), 150)
-      } else {
-        timeoutId = window.setTimeout(() => {
-          setHeroCopyText(heroCopyText.slice(0, heroCopyText.length - 1))
-        }, 15)
-      }
-    } else if (heroPhase === 'titleTyping') {
-      if (heroTitleText.length >= fullTitle.length) {
-        setHeroPhase('done')
-      } else {
-        timeoutId = window.setTimeout(() => {
-          setHeroTitleText(fullTitle.slice(0, heroTitleText.length + 1))
-        }, 15)
-      }
-    }
-
-    return () => {
-      if (timeoutId) window.clearTimeout(timeoutId)
-    }
-  }, [heroPhase, heroCopyText, heroTitleText])
-
   const handleOrderSaved = (orderId, orderPayload) => {
     setLastOrder({ id: orderId, ...orderPayload })
     setRefreshOrders((prev) => !prev)
@@ -136,7 +94,7 @@ function App() {
   return (
     <CartProvider menuItems={menuItems}>
       <div className="app-shell">
-        <p className="eyebrow">Tulamia Mini Food Shop</p>
+        <h1 className="eyebrow">Tulamia Mini Food Shop / Tiny treats happy tummies</h1>
         <nav className="tab-bar">
           <button
             type="button"
@@ -160,10 +118,6 @@ function App() {
               {status.loading && <div className="status-banner">Loading live menu …</div>}
               {status.error && <div className="status-banner error">{status.error}</div>}
             </div>
-            <header className="hero">
-              <h1>{heroTitleText}</h1>
-              <p className="hero-copy">{heroCopyText}</p>
-            </header>
 
             <main className="shop-layout">
               <section className="menu-section">
@@ -172,6 +126,10 @@ function App() {
                   <p>Tap a dish to drop it into your basket.</p>
                 </div>
                 <MenuGrid />
+                <p className="hero-copy">
+                  Order freshly prepared street-food favorites — ready for pickup in 15 minutes or
+                  delivered to your door.
+                </p>
               </section>
 
               <aside className="order-panel">
