@@ -148,7 +148,9 @@ export async function fetchOrders() {
   }
 
   const storedOrders = readStoredOrders()
-  return [...staticOrders, ...storedOrders]
+  const allOrders = [...staticOrders, ...storedOrders]
+  // Ensure consistent sorting (Newest first) matching Supabase behavior
+  return allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 }
 
 export async function saveOrder(order) {

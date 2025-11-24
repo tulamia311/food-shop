@@ -237,7 +237,7 @@ function App() {
                 <p className="empty-state">{t('shop.no_orders')}</p>
               ) : (
                 <ul className="orders-list">
-                  {orders.slice(-5).reverse().map((order) => (
+                  {orders.slice(0, 5).map((order) => (
                     <li key={order.id} className="order-card">
                       <div className="order-card-head">
                         <div className="order-card-title">
